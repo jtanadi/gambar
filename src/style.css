@@ -1,0 +1,66 @@
+* {
+  box-sizing: border-box;
+}
+body{
+  margin: 0;
+  background-color: gray;
+}
+
+#container {
+  height: 99vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#container-flex {
+  display: flex;
+  margin-left: calc(-100px + 1rem);
+  height: 600px;
+}
+
+#toolbar {
+  width: 100px;
+  height: 300px;
+  margin-right: 1rem;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border: 1px solid black;
+}
+
+.tool {
+  flex: 1;
+}
+
+.tool:not(:last-child) {
+  border-bottom: 1px solid black;
+}
+
+.tool.selected {
+  background-color: lightgray;
+}
+
+#canvas {
+  background-color: white;
+  border: 1px solid black;
+}
+
+#control-panel {
+  width: 50px;
+  height: 200px;
+  margin-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border: 1px solid black;
+}
+
+.stepper, .file-button {
+  flex: 1;
+}
+
+.stepper:not(:last-child), .file-button:not(:last-child){
+  border-bottom: 1px solid black;
+}

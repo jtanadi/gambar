@@ -1,0 +1,14 @@
+{
+  "name": "draw",
+  "version": "0.1.0",
+  "description": "basic drawing app",
+  "main": "main.js",
+  "scripts": {
+    "dev": "npx parcel ./src/index.html -d ./dev/"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.3"
+  }
+}
