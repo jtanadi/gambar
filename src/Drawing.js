@@ -1,10 +1,22 @@
-const FixedCapStack = require("./FixedCapacityStack")
+const FixedCapStack = require("./FixedCapacityStack");
 
 // Private convenience functions (only available to this module)
+// Not sure if a good idea to be here (vs. public methods)
 const drawMethods = {
   line(x0, y0, x1, y1, pathToDraw) {
     pathToDraw.moveTo(x0, y0);
     pathToDraw.lineTo(x1, y1);
+  },
+  poly(pts, pathToDraw) {
+    pts.forEach((pt, i) => {
+      const [x, y] = pt;
+
+      if (i === 0) {
+        pathToDraw.moveTo(x, y);
+      } else {
+        pathToDraw.lineTo(x, y);
+      }
+    })
   },
   rect(x0, y0, x1, y1, pathToDraw) {
     const width = Math.abs(x1 - x0);
@@ -32,13 +44,23 @@ const drawMethods = {
 module.exports = class Drawing {
   constructor(canvas) {
     this.canvas = canvas;
-    this.context = this.canvas.getContext("2d");
+
+    try {
+      this.context = this.canvas.getContext("2d");
+    } catch (e) {
+      console.err(e);
+    }
 
     // Keep a shapes stack because they have to be redrawn often
     // (so they appear persistent) and so we can save an SVG file later
     this.shapes = [];
 
+    // Circular stack version of `this.shapes`...
+    // this.shapes = new CircularStack(10);
+
     this.history = new FixedCapStack(10);
+
+    this.polypts = [];
   }
 
   clear() {
@@ -66,6 +88,22 @@ module.exports = class Drawing {
     this.context.stroke(path);
   }
 
+  clickDraw(x0, y0, x1, y1, mode) {
+    this.drawShapes();
+    const path = new Path2D();
+    drawMethods.line(x0, y0, x1, y1, path);
+
+    this.context.stroke(path);
+  }
+
+  addPtToPoly(x, y) {
+    const path = new Path2D();
+    this.polypts.push([x, y]);
+    drawMethods.poly(this.polypts, path);
+    this.shapes.push({ path });
+    this.drawShapes();
+  }
+
   createShape(x0, y0, x1, y1, mode, stroke="black", fill="none") {
     // Create shape by making a new Path2D object
     // Shape objects (path and SVG data) are saved in `this.shapes` stack and redrawn at every turn
@@ -86,7 +124,7 @@ module.exports = class Drawing {
 
     this.shapes.push({ path, svg });
     this.drawShapes();
-    if (this.history.index) this.history.clear();
+    this.history.clear();
   }
 
   drawShapes() {
@@ -111,9 +149,9 @@ module.exports = class Drawing {
     const shapeToStore = this.shapes.pop()
     if (!shapeToStore) return;
 
-    // If we're at capacity, this.history stack will return
+    // If we're at capacity, `this.history` stack will return
     // the item we're trying to push; when that happens,
-    // push that back onto our this.shapes array (ie. don't undo)
+    // push that back onto our `this.shapes` array (ie. don't undo)
     const shapeReturned = this.history.push(shapeToStore);
     if (shapeReturned) this.shapes.push(shapeReturned);
     this.drawShapes();
