@@ -4,7 +4,7 @@ let selectedTool = document.querySelector(".selected");
 const steppers = document.querySelectorAll(".stepper");
 const fileButtons = document.querySelectorAll(".file-button");
 
-const Drawing = require("./drawing");
+const Drawing = require("./Drawing");
 const dwg = new Drawing(canvas);
 
 let down = false;
