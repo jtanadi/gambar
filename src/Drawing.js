@@ -111,6 +111,9 @@ module.exports = class Drawing {
     const shapeToStore = this.shapes.pop()
     if (!shapeToStore) return;
 
+    // If we're at capacity, this.history stack will return
+    // the item we're trying to push; when that happens,
+    // push that back onto our this.shapes array (ie. don't undo)
     const shapeReturned = this.history.push(shapeToStore);
     if (shapeReturned) this.shapes.push(shapeReturned);
     this.drawShapes();
