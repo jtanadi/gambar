@@ -84,7 +84,6 @@ module.exports = class Drawing {
       svg = `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${stroke}" fill="none"/>`;
     }
 
-    this.history.push({ path, svg });
     this.shapes.push({ path, svg });
     this.drawShapes();
   }
@@ -108,7 +107,9 @@ module.exports = class Drawing {
   }
 
   undo() {
-    this.shapes.pop();
+    const shapeToStore = this.shapes.pop()
+    if (!shapeToStore) return;
+    this.history.push(shapeToStore);
     this.drawShapes();
   }
 
