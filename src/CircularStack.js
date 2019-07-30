@@ -52,4 +52,31 @@ module.exports = class CircularStack {
 
     return item;
   }
+
+  forEach(cb) {
+    if (typeof cb !== "function") throw new Error("Please pass in a callback");
+
+    const end = (this.index < this.capacity)
+      ? this.index
+      : this.capacity
+
+    for (let i = 0; i < end; i++) {
+      cb(this.stack[i], i);
+    }
+  }
+
+  map(cb) {
+    if (typeof cb !== "function") throw new Error("Please pass in a callback");
+
+    const end = (this.index < this.capacity)
+      ? this.index
+      : this.capacity
+
+    const returnArr = [];
+    for (let i = 0; i < end; i++) {
+      returnArr.push(this.stack[i], i, this.stack);
+    }
+
+    return returnArr;
+  }
 }

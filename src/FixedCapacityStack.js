@@ -38,4 +38,23 @@ module.exports = class FixedCapacityStack {
     this.stack[this.index] = null;
     return item;
   }
+
+  forEach(cb) {
+    if (typeof cb !== "function") throw new Error("Please pass in a callback");
+
+    for (let i = 0; i < this.capacity; i++) {
+      cb(this.stack[i], i);
+    }
+  }
+
+  map(cb) {
+    if (typeof cb !== "function") throw new Error("Please pass in a callback");
+
+    const returnArr = [];
+    for (let i = 0; i < this.capacity; i++) {
+      returnArr.push(this.stack[i], i, this.stack);
+    }
+
+    return returnArr;
+  }
 }
