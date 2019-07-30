@@ -1,4 +1,4 @@
-const CircularStack = require("./CircularStack");
+const FixedCapStack = require("./FixedCapacityStack")
 
 // Private convenience functions (only available to this module)
 const drawMethods = {
@@ -38,7 +38,7 @@ module.exports = class Drawing {
     // (so they appear persistent) and so we can save an SVG file later
     this.shapes = [];
 
-    this.history = new CircularStack(10);
+    this.history = new FixedCapStack(10);
   }
 
   clear() {
@@ -86,6 +86,7 @@ module.exports = class Drawing {
 
     this.shapes.push({ path, svg });
     this.drawShapes();
+    if (this.history.index) this.history.clear();
   }
 
   drawShapes() {
@@ -109,7 +110,9 @@ module.exports = class Drawing {
   undo() {
     const shapeToStore = this.shapes.pop()
     if (!shapeToStore) return;
-    this.history.push(shapeToStore);
+
+    const shapeReturned = this.history.push(shapeToStore);
+    if (shapeReturned) this.shapes.push(shapeReturned);
     this.drawShapes();
   }
 
