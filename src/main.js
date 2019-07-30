@@ -59,20 +59,7 @@ canvas.addEventListener("mouseup", evt => {
 })
 
 canvas.addEventListener("mousemove", evt => {
-  if (!inCanvas) return;
-
-  if (selectedTool.id === "polyline") {
-    dwg.clickDraw(startX, startY, evt.offsetX, evt.offsetY, selectedTool.id);
-  } else if (down){
-    dwg.drawMarquee(startX, startY, evt.offsetX, evt.offsetY, selectedTool.id);
-  }
-})
-
-canvas.addEventListener("click", evt => {
-  if (selectedTool.id === "polyline") {
-    startX = evt.offsetX;
-    startY = evt.offsetY;
-    dwg.addPtToPoly(startX, startY);
-  }
+  if (!down || !inCanvas) return;
+  dwg.drawMarquee(startX, startY, evt.offsetX, evt.offsetY, selectedTool.id);
 })
 

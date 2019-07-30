@@ -7,17 +7,6 @@ const drawMethods = {
     pathToDraw.moveTo(x0, y0);
     pathToDraw.lineTo(x1, y1);
   },
-  poly(pts, pathToDraw) {
-    pts.forEach((pt, i) => {
-      const [x, y] = pt;
-
-      if (i === 0) {
-        pathToDraw.moveTo(x, y);
-      } else {
-        pathToDraw.lineTo(x, y);
-      }
-    })
-  },
   rect(x0, y0, x1, y1, pathToDraw) {
     const width = Math.abs(x1 - x0);
     const height = Math.abs(y1 - y0);
@@ -59,8 +48,6 @@ module.exports = class Drawing {
     // this.shapes = new CircularStack(10);
 
     this.history = new FixedCapStack(10);
-
-    this.polypts = [];
   }
 
   clear() {
@@ -86,22 +73,6 @@ module.exports = class Drawing {
 
     // Draw marquee
     this.context.stroke(path);
-  }
-
-  clickDraw(x0, y0, x1, y1, mode) {
-    this.drawShapes();
-    const path = new Path2D();
-    drawMethods.line(x0, y0, x1, y1, path);
-
-    this.context.stroke(path);
-  }
-
-  addPtToPoly(x, y) {
-    const path = new Path2D();
-    this.polypts.push([x, y]);
-    drawMethods.poly(this.polypts, path);
-    this.shapes.push({ path });
-    this.drawShapes();
   }
 
   createShape(x0, y0, x1, y1, mode, stroke="black", fill="none") {
