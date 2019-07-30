@@ -1,7 +1,7 @@
 const canvas = document.getElementById("canvas");
 const tools = document.querySelectorAll(".tool");
 let selectedTool = document.querySelector(".selected");
-const steppers = document.querySelectorAll(".stepper");
+const historyBtns = document.querySelectorAll(".history");
 const fileButtons = document.querySelectorAll(".file-button");
 
 const Drawing = require("./Drawing");
@@ -19,8 +19,8 @@ tools.forEach(tool => {
   })
 })
 
-steppers.forEach(stepper => {
-  stepper.addEventListener("click", evt => {
+historyBtns.forEach(historyBtn => {
+  historyBtn.addEventListener("click", evt => {
     if (evt.target.id === "undo") {
       dwg.undo();
     } else if (evt.target.id === "redo") {
@@ -46,19 +46,33 @@ canvas.addEventListener("mouseleave", () => {
 });
 
 canvas.addEventListener("mousedown", evt => {
-  if (!inCanvas) return;
+  if (!inCanvas || selectedTool.id === "polyline") return;
   down = true;
   startX = evt.offsetX;
   startY = evt.offsetY;
 })
 
 canvas.addEventListener("mouseup", evt => {
+  if (selectedTool.id === "polyline") return;
   down = false;
   dwg.createShape(startX, startY, evt.offsetX, evt.offsetY, selectedTool.id);
 })
 
 canvas.addEventListener("mousemove", evt => {
-  if (!down || !inCanvas) return;
-  dwg.drawMarquee(startX, startY, evt.offsetX, evt.offsetY, selectedTool.id);
+  if (!inCanvas) return;
+
+  if (selectedTool.id === "polyline") {
+    dwg.clickDraw(startX, startY, evt.offsetX, evt.offsetY, selectedTool.id);
+  } else if (down){
+    dwg.drawMarquee(startX, startY, evt.offsetX, evt.offsetY, selectedTool.id);
+  }
+})
+
+canvas.addEventListener("click", evt => {
+  if (selectedTool.id === "polyline") {
+    startX = evt.offsetX;
+    startY = evt.offsetY;
+    dwg.addPtToPoly(startX, startY);
+  }
 })
 
