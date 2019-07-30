@@ -57,10 +57,10 @@ body{
   border: 1px solid black;
 }
 
-.stepper, .file-button {
+.history, .file-button {
   flex: 1;
 }
 
-.stepper:not(:last-child), .file-button:not(:last-child){
+.history:not(:last-child), .file-button:not(:last-child){
   border-bottom: 1px solid black;
 }
