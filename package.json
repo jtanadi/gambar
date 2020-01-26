@@ -4,11 +4,13 @@
   "description": "Sketch of a drawing app",
   "main": "main.js",
   "scripts": {
-    "dev": "npx parcel ./src/index.html -d ./dev/"
+    "pack": "tsc && ./node_modules/.bin/webpack",
+    "dev": "tsc --watch & ./node_modules/.bin/webpack --mode=\"development\" ./browser_test/src/index.js -o ./browser_test/index.js --watch"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "parcel-bundler": "^1.12.3"
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
   }
 }
