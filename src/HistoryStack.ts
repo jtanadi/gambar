@@ -1,17 +1,21 @@
 export default class HistoryStack<T> {
   private capacity: number
+
   private start: number
+
   private currentIdx: number
+
   private circular: boolean
+
   private stack: T[]
 
   constructor(capacity: number) {
-    if (capacity < 1) throw new Error("Capacity must be larger than 0");
-    this.capacity = capacity;
-    this.start = 0;
+    if (capacity < 1) throw new Error("Capacity must be larger than 0")
+    this.capacity = capacity
+    this.start = 0
     this.currentIdx = 0
     this.circular = false
-    this.stack = new Array(this.capacity).fill(null);
+    this.stack = new Array(this.capacity).fill(null)
   }
 
   clear(): void {

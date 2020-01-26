@@ -1,5 +1,13 @@
 import HistoryStack from "./HistoryStack"
-import { Point, Shape, StyleProps, Rectangle, Ellipse, Line } from "./geometry"
+import {
+  Point,
+  Shape,
+  StyleProps,
+  Rectangle,
+  Ellipse,
+  Line,
+  Diamond,
+} from "./geometry"
 
 export default class Drawing {
   canvas: HTMLCanvasElement
@@ -8,110 +16,123 @@ export default class Drawing {
   history: HistoryStack<Shape>
 
   constructor(canvas: HTMLCanvasElement) {
-    this.canvas = canvas;
+    this.canvas = canvas
 
     try {
-      this.context = this.canvas.getContext('2d');
-      this.context.translate(0.5, 0.5);
+      this.context = this.canvas.getContext("2d")
+      this.context.translate(0.5, 0.5)
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
 
-    this.shapes = [];
+    this.shapes = []
+    /* this.history = []; */
     this.history = new HistoryStack<Shape>(10)
   }
 
-  clear() {
+  delete(): void {
+    // Delete everything in drawing
+    this.shapes = []
+    this.render()
+  }
+
+  clearSelection(): void {
+    this.shapes.forEach(shape => {
+      shape.selected = false
+    })
+    this.render()
+  }
+
+  clearCanvas(): void {
     // Clear context by drawing a clearRect the size of the canvas
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.shapes = [];
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
   }
 
-  drawMarquee(pt0: Point, pt1: Point, type: string) {
-    // Draw marquee by clearing context and drawing a shape
-    // from (x0, y0) (top left) to (x1, y1) (bottom right)
-
-    // Draw all shapes so they appear persistent
-    this.drawShapes();
-
-    const marqueeProps: StyleProps = {
-      type,
-      strokeColor: "gray",
-      strokeWidth: 1,
+  rectangle(pt0: Point, pt1: Point, style: StyleProps, save = true): void {
+    this.clearSelection()
+    const rect = new Rectangle(pt0, pt1, style)
+    if (save) {
+      this.shapes.push(rect)
     }
-
-    let marquee: Shape
-    switch (type) {
-      case "ellipse":
-        marquee = new Ellipse(pt0, pt1, marqueeProps)
-        break
-      case "line":
-        marquee = new Line(pt0, pt1, marqueeProps)
-        break
-      default:
-        marquee = new Rectangle(pt0, pt1, marqueeProps)
+    this.render()
+    if (!save) {
+      rect.draw(this.context)
     }
-    marquee.draw(this.context)
   }
 
-  /* createShape(x0, y0, x1, y1, mode, stroke = 'black', fill = 'none') { */
-
-
-  /*   // Create shape by making a new Path2D object */
-  /*   // Shape objects (path and SVG data) are saved in `this.shapes` stack and redrawn at every turn */
-  /*   // x0, y0 is top left corner; x1, y1 is bottom right corner */
-
-  /*   const path = new Path2D(); */
-  /*   if (mode === 'rect') { */
-  /*     const [x, y, width, height] = drawMethods.rect(x0, y0, x1, y1, path); */
-  /*   } else if (mode === 'ellipse') { */
-  /*     const [cx, cy, rx, ry] = drawMethods.ellipse(x0, y0, x1, y1, path); */
-  /*   } else if (mode === 'line') { */
-  /*     drawMethods.line(x0, y0, x1, y1, path); */
-  /*   } */
-
-  /*   this.shapes.push({ */
-  /*     path, */
-  /*     mode, */
-  /*     stroke, */
-  /*     fill, */
-  /*   }); */
-  /*   this.drawShapes(); */
-  /*   /1* this.history.clear(); *1/ */
-  /* } */
-
-  /* createBrush(x0, y0, x1, y1, stroke = 'none', fill = 'none') { */
-  /*   const path = new Path2D(); */
-  /*   drawMethods.line(x0, y0, x1, y1, path); */
-  /*   this.shapes.push({ */
-  /*     path, */
-  /*     mode: 'brush', */
-  /*     stroke, */
-  /*     fill, */
-  /*   }); */
-  /*   this.drawShapes(false); */
-  /*   /1* this.history.clear(); *1/ */
-  /* } */
-
-  drawShapes(clear = true) {
-    // Currently, we have to clear and redraw all shapes
-    // because we need the marquee to refresh on mousemove
-    // (Marquee isn't part of shapes stack, so only current
-    // one will be drawn at each refresh)
-    if (clear) {
-      this.clear();
+  ellipse(pt0: Point, pt1: Point, style: StyleProps, save = true): void {
+    this.clearSelection()
+    const ellipse = new Ellipse(pt0, pt1, style)
+    if (save) {
+      this.shapes.push(ellipse)
     }
+    this.render()
+    if (!save) {
+      ellipse.draw(this.context)
+    }
+  }
+
+  line(pt0: Point, pt1: Point, style: StyleProps, save = true): void {
+    this.clearSelection()
+    const line = new Line(pt0, pt1, style)
+    if (save) {
+      this.shapes.push(line)
+    }
+    this.render()
+    if (!save) {
+      line.draw(this.context)
+    }
+  }
+
+  diamond(pt0: Point, pt1: Point, style: StyleProps, save = true): void {
+    this.clearSelection()
+    const diamond = new Diamond(pt0, pt1, style)
+    if (save) {
+      this.shapes.push(diamond)
+    }
+    this.render()
+    if (!save) {
+      diamond.draw(this.context)
+    }
+  }
+
+  render(): void {
+    // Clear canvas and redraw all shapes in stack
+    this.clearCanvas()
     this.shapes.forEach(shape => {
       shape.draw(this.context)
+
+      if (shape.selected) {
+        shape.drawBoundingBox(this.context)
+      }
     })
   }
 
-  /*
-  load(svg) {
-    this.shapes = parseSVG(svg);
-    this.drawShapes();
+  toggleSelect(point: Point, clearSelection = true): void {
+    if (clearSelection) {
+      this.clearSelection()
+    }
+
+    // Iterate from the back to select top-most object first
+    for (let i = this.shapes.length - 1; i >= 0; i--) {
+      const shape = this.shapes[i]
+      if (this.context.isPointInPath(shape.path, point.x, point.y)) {
+        shape.selected = !shape.selected
+        break
+      }
+    }
   }
 
+  save(): void {
+    console.log(this.shapes)
+  }
+
+  load(shapes: Shape[]): void {
+    this.shapes = shapes
+    this.render()
+  }
+
+  /*
   save() {
     return new Error('not yet implemented');
     // let xml = `<?xml version="1.0" encoding="UTF-8" ?>\n<svg width="${this.canvas.width}" height="${this.canvas.height}" xmlns="http://www.w3.org/2000/svg">\n`
@@ -123,23 +144,23 @@ export default class Drawing {
   }
    */
 
-  getDrawingData() {
-    return this.canvas.toDataURL();
+  getDrawingData(): string {
+    return this.canvas.toDataURL()
   }
 
-  undo() {
+  undo(): void {
     // Currently only undoes drawing
-    const shapeToStore = this.shapes.pop();
-    if (!shapeToStore) return;
-    this.history.push(shapeToStore);
-    this.drawShapes();
+    const shapeToStore = this.shapes.pop()
+    if (!shapeToStore) return
+    this.history.push(shapeToStore)
+    this.render()
   }
 
-  redo() {
+  redo(): void {
     // Currently only redoes drawing
-    const shapeToRedraw = this.history.pop();
-    if (!shapeToRedraw) return;
-    this.shapes.push(shapeToRedraw);
-    this.drawShapes();
+    const shapeToRedraw = this.history.pop()
+    if (!shapeToRedraw) return
+    this.shapes.push(shapeToRedraw)
+    this.render()
   }
 }

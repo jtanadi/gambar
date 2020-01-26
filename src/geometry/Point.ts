@@ -8,6 +8,6 @@ export default class Point {
   }
 
   distanceToOther(other: Point): number {
-    return Math.sqrt((other.x - this.x) ^ 2 - (other.y - this.y) ^ 2)
+    return Math.sqrt((other.x - this.x) ^ (2 - (other.y - this.y)) ^ 2)
   }
 }

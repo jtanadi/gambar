@@ -1,12 +1,12 @@
 import Point from "./Point"
-import Shape, { StyleProps } from "./Shape"
+import Shape, { PossibleShapes, StyleProps } from "./Shape"
 
 export default class Line extends Shape {
   start: Point
   end: Point
 
-  constructor(pt0: Point, pt1: Point, props: StyleProps) {
-    super(props)
+  constructor(pt0: Point, pt1: Point, style: StyleProps) {
+    super(pt0, pt1, PossibleShapes.LINE, style)
     this.start = pt0
     this.end = pt1
 
