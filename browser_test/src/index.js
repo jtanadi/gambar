@@ -1,15 +1,16 @@
+import Drawing from "../../compiled"
+
 const canvas = document.getElementById("canvas");
 const tools = document.querySelectorAll(".tool");
 let selectedTool = document.querySelector(".selected");
 const historyBtns = document.querySelectorAll(".history");
 const fileButtons = document.querySelectorAll(".file-button");
 
-const Drawing = require("./Drawing");
 const dwg = new Drawing(canvas);
 
 let down = false;
 let inCanvas = false;
-let startX, startY;
+const start = { x: 0, y: 0 }
 
 tools.forEach(tool => {
   tool.addEventListener("click", evt => {
@@ -48,18 +49,23 @@ canvas.addEventListener("mouseleave", () => {
 canvas.addEventListener("mousedown", evt => {
   if (!inCanvas || selectedTool.id === "polyline") return;
   down = true;
-  startX = evt.offsetX;
-  startY = evt.offsetY;
+  start.x = evt.offsetX;
+  start.y = evt.offsetY;
 })
 
 canvas.addEventListener("mouseup", evt => {
   if (selectedTool.id === "polyline") return;
   down = false;
-  dwg.createShape(startX, startY, evt.offsetX, evt.offsetY, selectedTool.id);
+  // dwg.createShape(startX, startY, evt.offsetX, evt.offsetY, selectedTool.id);
 })
 
 canvas.addEventListener("mousemove", evt => {
   if (!down || !inCanvas) return;
-  dwg.drawMarquee(startX, startY, evt.offsetX, evt.offsetY, selectedTool.id);
+  const end = {
+    x: evt.offsetX,
+    y: evt.offsetY
+  }
+
+  dwg.drawMarquee(start, end, selectedTool.id);
 })
 
