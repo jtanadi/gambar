@@ -1,8 +1,8 @@
 {
-  "name": "draw",
+  "name": "gambar",
   "version": "0.1.0",
   "description": "Sketch of a drawing app",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
     "pack": "tsc && ./node_modules/.bin/webpack",
     "dev": "tsc --watch & ./node_modules/.bin/webpack --mode=\"development\" ./browser_test/src/index.js -o ./browser_test/index.js --watch"
