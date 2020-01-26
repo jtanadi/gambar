@@ -12,6 +12,29 @@ let down = false
 let inCanvas = false
 const start = { x: 0, y: 0 }
 
+function drawMarquee(start, end, tool) {
+  const marqueeProps = {
+    strokeColor: "gray",
+    strokeWidth: 1,
+  }
+  switch (tool) {
+    case "ellipse":
+      dwg.ellipse(start, end, marqueeProps, false)
+      break
+    case "line":
+      dwg.line(start, end, marqueeProps, false)
+      break
+    case "diamond":
+      dwg.diamond(start, end, marqueeProps, false)
+      break
+    case "rectangle":
+      dwg.rectangle(start, end, marqueeProps, false)
+      break
+    case "selection":
+      dwg.rectangle(start, end, { fillColor: "rgba(0, 0, 0, 0.25)" }, false)
+  }
+}
+
 tools.forEach(tool => {
   tool.addEventListener("click", evt => {
     selectedTool.classList.remove("selected")
@@ -101,25 +124,3 @@ canvas.addEventListener("mousemove", evt => {
   drawMarquee(start, end, selectedTool.id)
 })
 
-function drawMarquee(start, end, tool) {
-  const marqueeProps = {
-    strokeColor: "gray",
-    strokeWidth: 1,
-  }
-  switch (tool) {
-    case "ellipse":
-      dwg.ellipse(start, end, marqueeProps, false)
-      break
-    case "line":
-      dwg.line(start, end, marqueeProps, false)
-      break
-    case "diamond":
-      dwg.diamond(start, end, marqueeProps, false)
-      break
-    case "rectangle":
-      dwg.rectangle(start, end, marqueeProps, false)
-      break
-    case "selection":
-      dwg.rectangle(start, end, { fillColor: "rgba(0, 0, 0, 0.25)" }, false)
-  }
-}
