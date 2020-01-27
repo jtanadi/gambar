@@ -1,4 +1,4 @@
-import Drawing from "../../compiled"
+import Gambar from "../../dist"
 
 const canvas = document.getElementById("canvas")
 const tools = document.querySelectorAll(".tool")
@@ -6,7 +6,7 @@ let selectedTool = document.querySelector(".selected")
 const historyBtns = document.querySelectorAll(".history")
 const fileButtons = document.querySelectorAll(".file-button")
 
-const dwg = new Drawing(canvas)
+const dwg = new Gambar(canvas)
 
 let down = false
 let drag = false
