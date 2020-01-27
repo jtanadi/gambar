@@ -1,5 +1,6 @@
 import HistoryStack from "./HistoryStack"
 import {
+  BoundingBox,
   Point,
   Shape,
   StyleProps,
@@ -104,39 +105,13 @@ export default class Drawing {
     })
   }
 
-  private drawHandle(point: Point, style: StyleProps): void {
-    const handleSize = 10
-    const pt0 = new Point(point.x - handleSize / 2, point.y - handleSize / 2)
-    const pt1 = new Point(point.x + handleSize / 2, point.y + handleSize / 2)
-
-    const handle = new Rectangle(pt0, pt1, style)
-    handle.draw(this.context)
-  }
-
-  drawBoundingBox(
+  boundingBox(
     shape: Shape,
     boxStyle: StyleProps,
     handleStyle: StyleProps
   ): void {
-    const end = new Point(
-      shape.start.x + shape.width,
-      shape.start.y + shape.height
-    )
-    const box = new Rectangle(shape.start, end, boxStyle)
-    box.draw(this.context)
-
-    const pts = [
-      shape.start,
-      new Point(shape.start.x + shape.width, shape.start.y),
-      new Point(shape.start.x + shape.width, shape.start.y + shape.height),
-      new Point(shape.start.x, shape.start.y + shape.height),
-
-      new Point(shape.start.x + shape.width / 2, shape.start.y),
-      new Point(shape.start.x + shape.width, shape.start.y + shape.height / 2),
-      new Point(shape.start.x + shape.width / 2, shape.start.y + shape.height),
-      new Point(shape.start.x, shape.start.y + shape.height / 2),
-    ]
-    pts.forEach(point => this.drawHandle(point, handleStyle))
+    const bbox = new BoundingBox(shape, boxStyle, handleStyle)
+    bbox.draw(this.context)
   }
 
   selectShapeAtPoint(point: Point, clearSelection = true): void {

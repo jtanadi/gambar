@@ -89,7 +89,7 @@ canvas.addEventListener("mousedown", evt => {
 
     for (const shape of dwg.shapes) {
       if (shape.selected) {
-        dwg.drawBoundingBox(shape, boxStyle, handleStyle)
+        dwg.boundingBox(shape, boxStyle, handleStyle)
       }
     }
   }
