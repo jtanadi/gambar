@@ -17,21 +17,13 @@ export enum PossibleShapes {
 
 export default class Shape {
   readonly type: PossibleShapes
-
   path: Path2D
-
   start: Point
-
   width: number
-
   height: number
-
   selected: boolean
-
   strokeColor: string
-
   strokeWidth: number
-
   fillColor: string
 
   constructor(pt0: Point, pt1: Point, type: PossibleShapes, style: StyleProps) {
@@ -60,35 +52,5 @@ export default class Shape {
       context.fillStyle = this.fillColor
       context.fill(this.path)
     }
-  }
-
-  private drawHandle(point: Point, context: CanvasRenderingContext2D): void {
-    const handleSize = 10
-
-    const handle = new Path2D()
-    handle.rect(
-      point.x - handleSize / 2,
-      point.y - handleSize / 2,
-      handleSize,
-      handleSize
-    )
-
-    context.strokeStyle = "black"
-    context.lineWidth = 1
-    context.fillStyle = "white"
-
-    context.stroke(handle)
-    context.fill(handle)
-  }
-
-  drawBoundingBox(context: CanvasRenderingContext2D): void {
-    const pts = [
-      this.start,
-      new Point(this.start.x + this.width, this.start.y),
-      new Point(this.start.x + this.width, this.start.y + this.height),
-      new Point(this.start.x, this.start.y + this.height),
-    ]
-
-    pts.forEach(point => this.drawHandle(point, context))
   }
 }
