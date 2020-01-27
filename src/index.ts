@@ -101,66 +101,87 @@ export default class Drawing {
     this.clearCanvas()
     this.shapes.forEach(shape => {
       shape.draw(this.context)
-
-      if (shape.selected) {
-        shape.drawBoundingBox(this.context)
-      }
     })
   }
 
-  toggleSelect(point: Point, clearSelection = true): void {
+  private drawHandle(point: Point, style: StyleProps): void {
+    const handleSize = 10
+    const pt0 = new Point(point.x - handleSize / 2, point.y - handleSize / 2)
+    const pt1 = new Point(point.x + handleSize / 2, point.y + handleSize / 2)
+
+    const handle = new Rectangle(pt0, pt1, style)
+    handle.draw(this.context)
+  }
+
+  drawBoundingBox(
+    shape: Shape,
+    boxStyle: StyleProps,
+    handleStyle: StyleProps
+  ): void {
+    const end = new Point(
+      shape.start.x + shape.width,
+      shape.start.y + shape.height
+    )
+    const box = new Rectangle(shape.start, end, boxStyle)
+    box.draw(this.context)
+
+    const pts = [
+      shape.start,
+      new Point(shape.start.x + shape.width, shape.start.y),
+      new Point(shape.start.x + shape.width, shape.start.y + shape.height),
+      new Point(shape.start.x, shape.start.y + shape.height),
+
+      new Point(shape.start.x + shape.width / 2, shape.start.y),
+      new Point(shape.start.x + shape.width, shape.start.y + shape.height / 2),
+      new Point(shape.start.x + shape.width / 2, shape.start.y + shape.height),
+      new Point(shape.start.x, shape.start.y + shape.height / 2),
+    ]
+    pts.forEach(point => this.drawHandle(point, handleStyle))
+  }
+
+  selectShapeAtPoint(point: Point, clearSelection = true): void {
     if (clearSelection) {
       this.clearSelection()
     }
 
+    const selectedShape: Shape = this.findShapeAtPoint(point)
+    if (selectedShape) {
+      selectedShape.selected = true
+    }
+  }
+
+  findShapeAtPoint(point: Point): Shape {
     // Iterate from the back to select top-most object first
     for (let i = this.shapes.length - 1; i >= 0; i--) {
       const shape = this.shapes[i]
       if (this.context.isPointInPath(shape.path, point.x, point.y)) {
-        shape.selected = !shape.selected
-        break
+        return shape
       }
     }
+    return null
   }
 
-  save(): void {
+  moveShape(shapeToMove: Shape, newStart: Point): void {
+    console.log(this.shapes)
+    this.shapes = this.shapes.map(shape => {
+      if (shape === shapeToMove) {
+        shape.start = newStart
+      }
+      return shape
+    })
     console.log(this.shapes)
   }
 
-  load(shapes: Shape[]): void {
+  loadStack(shapes: Shape[]): void {
     this.shapes = shapes
     this.render()
   }
-
-  /*
-  save() {
-    return new Error('not yet implemented');
-    // let xml = `<?xml version="1.0" encoding="UTF-8" ?>\n<svg width="${this.canvas.width}" height="${this.canvas.height}" xmlns="http://www.w3.org/2000/svg">\n`
-
-    // xml += this.shapes.map(shape => `  ${shape.svg}`).join("\n")
-    // xml += "\n</svg>"
-
-    // console.log(xml)
-  }
-   */
 
   getDrawingData(): string {
     return this.canvas.toDataURL()
   }
 
-  undo(): void {
-    // Currently only undoes drawing
-    const shapeToStore = this.shapes.pop()
-    if (!shapeToStore) return
-    this.history.push(shapeToStore)
-    this.render()
-  }
-
-  redo(): void {
-    // Currently only redoes drawing
-    const shapeToRedraw = this.history.pop()
-    if (!shapeToRedraw) return
-    this.shapes.push(shapeToRedraw)
-    this.render()
+  getShapeStack(): Shape[] {
+    return this.shapes
   }
 }

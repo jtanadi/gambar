@@ -9,6 +9,7 @@ const fileButtons = document.querySelectorAll(".file-button")
 const dwg = new Drawing(canvas)
 
 let down = false
+let drag = false
 let inCanvas = false
 const start = { x: 0, y: 0 }
 
@@ -67,12 +68,30 @@ canvas.addEventListener("mouseenter", () => (inCanvas = true))
 canvas.addEventListener("mouseleave", () => {
   inCanvas = false
   down = false
+  drag = false
 })
 
 canvas.addEventListener("mousedown", evt => {
   if (!inCanvas || selectedTool.id === "polyline") return
   if (selectedTool.id === "selection") {
-    dwg.toggleSelect({ x: evt.offsetX, y: evt.offsetY })
+    dwg.selectShapeAtPoint({ x: evt.offsetX, y: evt.offsetY })
+
+    const handleStyle = {
+      strokeColor: "black",
+      strokeWidth: 1,
+      fillColor: "white",
+    }
+
+    const boxStyle = {
+      strokeColor: "#0D98BA",
+      strokeWidth: 2,
+    }
+
+    for (const shape of dwg.shapes) {
+      if (shape.selected) {
+        dwg.drawBoundingBox(shape, boxStyle, handleStyle)
+      }
+    }
   }
 
   down = true
@@ -109,9 +128,12 @@ canvas.addEventListener("mouseup", evt => {
       dwg.diamond(start, end, style)
       break
     case "selection":
-      dwg.render()
+      if (drag) {
+        dwg.render()
+      }
       break
   }
+  drag = false
 })
 
 canvas.addEventListener("mousemove", evt => {
@@ -121,6 +143,11 @@ canvas.addEventListener("mousemove", evt => {
     y: evt.offsetY,
   }
 
-  drawMarquee(start, end, selectedTool.id)
+  if (selectedTool.id === "selection" && dwg.findShapeAtPoint(end) && !drag) {
+    console.log("move")
+  } else {
+    drag = true
+    drawMarquee(start, end, selectedTool.id)
+  }
 })
 
