@@ -10,7 +10,7 @@ import {
   Diamond,
 } from "./geometry"
 
-export default class Drawing {
+export default class Gambar {
   canvas: HTMLCanvasElement
   context: CanvasRenderingContext2D
   shapes: Shape[]
