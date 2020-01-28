@@ -1,4 +1,4 @@
-import Drawing from "../../dist/"
+import Drawing from "../../"
 
 const canvas = document.getElementById("canvas")
 const tools = document.querySelectorAll(".tool")
