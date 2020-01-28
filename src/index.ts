@@ -86,6 +86,8 @@ export default class Gambar {
   }
 
   diamond(pt0: Point, pt1: Point, style: StyleProps, save = true): void {
+    // This seems like a very specific implementation of a polygon
+    // Maybe best handled by the drawing app itself
     this.clearSelection()
     const diamond = new Diamond(pt0, pt1, style)
     if (save) {
@@ -95,6 +97,10 @@ export default class Gambar {
     if (!save) {
       diamond.draw(this.context)
     }
+  }
+
+  polygon(points: Point[], style: StyleProps): void {
+    throw new Error("Not yet implemented")
   }
 
   render(): void {
