@@ -1,6 +1,8 @@
 # gambar
 Gambar is a small drawing library written in Typescript. The library provides a thin, consistent, layer on top of some basic Canvas API methods.
 
+The name is Indonesian and translates to *picture*, *drawing*, or *to draw*.
+
 ## Usage
 Create a new instance of `Gambar` and pass in your `canvas` element.
 ```javascript
