@@ -16,7 +16,7 @@ module.exports = {
     extensions: [".ts", ".js"],
   },
   output: {
-    path: path.join(__dirname, "/dist"),
+    path: path.join(__dirname),
     filename: "index.js",
     library: "gambar",
     libraryTarget: "umd",
