@@ -1,23 +1,24 @@
 const path = require("path")
 
 module.exports = {
-  entry: path.join(__dirname, "compiled/index.js"),
+  entry: "./src/index.ts",
   mode: "production",
-  output: {
-    path: path.join(__dirname, "dist"),
-    filename: "index.js",
-    library: "gambar",
-  },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.ts?$/,
+        use: "ts-loader",
         exclude: /node_modules/,
-        use: ["babel-loader"],
       },
     ],
   },
   resolve: {
-    extensions: ["*", ".js"],
+    extensions: [".ts", ".js"],
+  },
+  output: {
+    path: path.join(__dirname, "/dist"),
+    filename: "index.js",
+    library: "gambar",
+    libraryTarget: "umd",
   },
 }
