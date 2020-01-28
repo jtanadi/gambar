@@ -18,17 +18,20 @@ gambar.rectangle(
   {x: 200, y: 150},
   {strokeColor: "red", strokeWidth: 2, fillColor: "white"})
 
-gambar.diamond(startPt, endPt, style)
 gambar.ellipse(startPt, endPt, style)
 gambar.line(startPt, endPt, style)
+gambar.diamond(startPt, endPt, style)
 ```
 
-`polygon` and `polyline` methods take an array of `point` objects and a `style` object.
+The `polygon` method takes an array of `point` objects and a `style` object.
 ```javascript
 gambar.polygon(
-  [{x: 10, y: 20}, {x: 100, y: 200}, {x: 50, y: 100}], 
-  {strokeColor: "blue", strokeWidth: 3})
-
-gambar.polyline([pt1, pt2, pt3, pt4], style)
+  [
+    {x: 10, y: 20},
+    {x: 100, y: 200},
+    {x: 50, y: 100}
+  ],
+  {strokeColor: "blue", strokeWidth: 3}
+)
 ```
 
