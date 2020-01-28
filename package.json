@@ -4,22 +4,21 @@
   "description": "Sketch of a drawing app",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc && ./node_modules/.bin/webpack",
-    "dev": "tsc --watch & ./node_modules/.bin/webpack --mode=\"development\" ./browser_test/src/index.js -o ./browser_test/index.js --watch"
+    "build": "./node_modules/.bin/webpack",
+    "dev": "./node_modules/.bin/webpack --watch",
+    "dev:browser": "npm run dev & ./node_modules/.bin/webpack --mode=\"development\" ./browser_test/src/index.js -o ./browser_test/index.js --watch"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.8.3",
     "@typescript-eslint/eslint-plugin": "^2.17.0",
     "@typescript-eslint/parser": "^2.17.0",
-    "babel": "^6.23.0",
-    "babel-loader": "^8.0.6",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-prettier": "^3.1.2",
     "prettier": "^1.19.1",
+    "ts-loader": "^6.2.1",
     "typescript": "^3.7.5",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"
