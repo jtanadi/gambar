@@ -54,7 +54,7 @@ export default class Shape {
     }
   }
 
-  move(delta: Point): void {
-    this.start = new Point(this.start.x + delta.x, this.start.y + delta.y)
+  move(delta: Point, ctx: CanvasRenderingContext2D): void {
+    ctx.translate(delta.x, delta.y)
   }
 }

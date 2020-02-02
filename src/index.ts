@@ -115,6 +115,7 @@ export default class Gambar {
         this.boundingBox(shape)
       }
     })
+    this.context.save()
   }
 
   private boundingBox(shape: Shape): void {
@@ -188,28 +189,10 @@ export default class Gambar {
   moveSelectedShapes(delta: Point): void {
     for (const shape of this.shapes) {
       if (shape.selected) {
-        shape.move(delta)
+        shape.move(delta, this.context)
       }
     }
     this.render()
-    console.log("not implemented correctly")
-
-    /* const selectedShapes: [Shape, number][] = this.findSelectedShapes() */
-    /* for (const [shape, i] of selectedShapes) { */
-    /*   const idx = this.shapes.findIndex(_shape => _shape.selected) */
-    /*   if (shape.type === "RECTANGLE") { */
-    /*     const pt0 = new Point(shape.start.x + delta.x, shape.start.y + delta.y) */
-    /*     const pt1 = new Point(pt0.x + shape.width, pt0.y + shape.height) */
-    /*     const style = { */
-    /*       strokeColor: shape.strokeColor, */
-    /*       strokeWidth: shape.strokeWidth, */
-    /*       fillColor: shape.fillColor, */
-    /*     } */
-    /*     const rect = new Rectangle(pt0, pt1, style) */
-    /*     this.shapes.splice(idx, 1, rect) */
-    /*   } */
-    /* } */
-    /* this.render() */
   }
 
   loadStack(shapes: Shape[]): void {
