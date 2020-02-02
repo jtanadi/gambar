@@ -13,6 +13,34 @@ let drag = false
 let inCanvas = false
 const start = { x: 0, y: 0 }
 
+function getTrianglePoints(start, end) {
+  const pt1 = {
+    x: start.x + (end.x - start.x) / 2,
+    y: start.y,
+  }
+
+  const pt2 = {
+    x: start.x,
+    y: end.y,
+  }
+
+  const pt3 = {
+    x: end.x,
+    y: end.y,
+  }
+
+  return [pt1, pt2, pt3]
+}
+
+function getDiamondPoints(start, end) {
+  const a = { x: start.x + (end.x - start.x) / 2, y: start.y }
+  const b = { x: end.x, y: start.y + (end.y - start.y) / 2 }
+  const c = { x: start.x + (end.x - start.x) / 2, y: end.y }
+  const d = { x: start.x, y: start.y + (end.y - start.y) / 2 }
+
+  return [a, b, c, d]
+}
+
 function drawMarquee(start, end, tool) {
   const marqueeProps = {
     strokeColor: "gray",
@@ -26,10 +54,15 @@ function drawMarquee(start, end, tool) {
       dwg.line(start, end, marqueeProps, false)
       break
     case "diamond":
-      dwg.diamond(start, end, marqueeProps, false)
+      const diamondPts = getDiamondPoints(start, end)
+      dwg.polygon(diamondPts, marqueeProps, false)
       break
     case "rectangle":
       dwg.rectangle(start, end, marqueeProps, false)
+      break
+    case "polygon":
+      const trianglePts = getTrianglePoints(start, end)
+      dwg.polygon(trianglePts, marqueeProps, false)
       break
     case "selection":
       dwg.rectangle(start, end, { fillColor: "rgba(0, 0, 0, 0.25)" }, false)
@@ -72,7 +105,7 @@ canvas.addEventListener("mouseleave", () => {
 })
 
 canvas.addEventListener("mousedown", evt => {
-  if (!inCanvas || selectedTool.id === "polyline") return
+  if (!inCanvas) return
   if (selectedTool.id === "selection") {
     dwg.selectShapeAtPoint({ x: evt.offsetX, y: evt.offsetY })
 
@@ -100,7 +133,6 @@ canvas.addEventListener("mousedown", evt => {
 })
 
 canvas.addEventListener("mouseup", evt => {
-  if (selectedTool.id === "polyline") return
   down = false
 
   const end = {
@@ -125,7 +157,12 @@ canvas.addEventListener("mouseup", evt => {
       dwg.line(start, end, style)
       break
     case "diamond":
-      dwg.diamond(start, end, style)
+      const diamondPts = getDiamondPoints(start, end)
+      dwg.polygon(diamondPts, style)
+      break
+    case "polygon":
+      const trianglePts = getTrianglePoints(start, end)
+      dwg.polygon(trianglePts, style)
       break
     case "selection":
       if (drag) {
@@ -150,4 +187,3 @@ canvas.addEventListener("mousemove", evt => {
     drawMarquee(start, end, selectedTool.id)
   }
 })
-

@@ -8,7 +8,6 @@ import {
   Ellipse,
   Line,
   Polygon,
-  Diamond,
 } from "./geometry"
 
 export default class Gambar {
