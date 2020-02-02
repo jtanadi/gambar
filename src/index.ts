@@ -7,6 +7,7 @@ import {
   Rectangle,
   Ellipse,
   Line,
+  Polygon,
   Diamond,
 } from "./geometry"
 
@@ -14,7 +15,6 @@ export default class Gambar {
   canvas: HTMLCanvasElement
   context: CanvasRenderingContext2D
   shapes: Shape[]
-  history: HistoryStack<Shape>
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas
@@ -27,8 +27,6 @@ export default class Gambar {
     }
 
     this.shapes = []
-    /* this.history = []; */
-    this.history = new HistoryStack<Shape>(10)
   }
 
   delete(): void {
@@ -85,22 +83,15 @@ export default class Gambar {
     }
   }
 
-  diamond(pt0: Point, pt1: Point, style: StyleProps, save = true): void {
-    // This seems like a very specific implementation of a polygon
-    // Maybe best handled by the drawing app itself
-    this.clearSelection()
-    const diamond = new Diamond(pt0, pt1, style)
+  polygon(points: Point[], style: StyleProps, save = true): void {
+    const polygon = new Polygon(points, style)
     if (save) {
-      this.shapes.push(diamond)
+      this.shapes.push(polygon)
     }
     this.render()
     if (!save) {
-      diamond.draw(this.context)
+      polygon.draw(this.context)
     }
-  }
-
-  polygon(points: Point[], style: StyleProps): void {
-    throw new Error("Not yet implemented")
   }
 
   render(): void {

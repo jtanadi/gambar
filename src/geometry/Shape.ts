@@ -12,7 +12,7 @@ export enum PossibleShapes {
   ELLIPSE = "ELLIPSE",
   LINE = "LINE",
   RECTANGLE = "RECTANGLE",
-  POLYLINE = "POLYLINE",
+  POLYGON = "POLYGON",
 }
 
 export default class Shape {
