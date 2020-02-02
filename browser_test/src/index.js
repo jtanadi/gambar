@@ -6,12 +6,25 @@ let selectedTool = document.querySelector(".selected")
 const historyBtns = document.querySelectorAll(".history")
 const fileButtons = document.querySelectorAll(".file-button")
 
-const dwg = new Drawing(canvas)
+const boxStyle = {
+  strokeColor: "#0D98BA",
+  strokeWidth: 2,
+}
+
+const handleStyle = {
+  strokeColor: "black",
+  strokeWidth: 1,
+  fillColor: "white",
+}
+
+const dwg = new Drawing(canvas, boxStyle, handleStyle)
 
 let down = false
 let drag = false
+let moved = false
 let inCanvas = false
 const start = { x: 0, y: 0 }
+const moveStart = { x: 0, y: 0 }
 
 function getTrianglePoints(start, end) {
   const pt1 = {
@@ -42,6 +55,7 @@ function getDiamondPoints(start, end) {
 }
 
 function drawMarquee(start, end, tool) {
+  if (start.x === end.x && start.y === end.y) return
   const marqueeProps = {
     strokeColor: "gray",
     strokeWidth: 1,
@@ -79,10 +93,10 @@ tools.forEach(tool => {
 
 historyBtns.forEach(historyBtn => {
   historyBtn.addEventListener("click", evt => {
-    if (evt.target.id === "undo") {
-      dwg.undo()
-    } else if (evt.target.id === "redo") {
-      dwg.redo()
+    if (evt.target.id === "bwd") {
+      dwg.pushSelectedShapesBackward()
+    } else if (evt.target.id === "fwd") {
+      dwg.pullSelectedShapesForward()
     }
   })
 })
@@ -108,23 +122,6 @@ canvas.addEventListener("mousedown", evt => {
   if (!inCanvas) return
   if (selectedTool.id === "selection") {
     dwg.selectShapeAtPoint({ x: evt.offsetX, y: evt.offsetY })
-
-    const handleStyle = {
-      strokeColor: "black",
-      strokeWidth: 1,
-      fillColor: "white",
-    }
-
-    const boxStyle = {
-      strokeColor: "#0D98BA",
-      strokeWidth: 2,
-    }
-
-    for (const shape of dwg.shapes) {
-      if (shape.selected) {
-        dwg.boundingBox(shape, boxStyle, handleStyle)
-      }
-    }
   }
 
   down = true
@@ -140,10 +137,12 @@ canvas.addEventListener("mouseup", evt => {
     y: evt.offsetY,
   }
 
+  if (start.x === end.x && start.y === end.y) return
+
   const style = {
     strokeColor: "green",
     strokeWidth: 1,
-    fillColor: "blue",
+    fillColor: "lightblue",
   }
 
   switch (selectedTool.id) {
@@ -171,6 +170,7 @@ canvas.addEventListener("mouseup", evt => {
       break
   }
   drag = false
+  moved = false
 })
 
 canvas.addEventListener("mousemove", evt => {
@@ -181,7 +181,26 @@ canvas.addEventListener("mousemove", evt => {
   }
 
   if (selectedTool.id === "selection" && dwg.findShapeAtPoint(end) && !drag) {
-    console.log("move")
+    if (!moved) {
+      const delta = {
+        x: end.x - start.x,
+        y: end.y - start.y,
+      }
+      dwg.moveSelectedShapes(delta)
+
+      moveStart.x = start.x
+      moveStart.y = start.y
+      moved = true
+    } else {
+      const delta = {
+        x: end.x - moveStart.x,
+        y: end.y - moveStart.y,
+      }
+      dwg.moveSelectedShapes(delta)
+
+      moveStart.x = end.x
+      moveStart.y = end.y
+    }
   } else {
     drag = true
     drawMarquee(start, end, selectedTool.id)

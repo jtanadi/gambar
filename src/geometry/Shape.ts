@@ -53,4 +53,8 @@ export default class Shape {
       context.fill(this.path)
     }
   }
+
+  move(delta: Point): void {
+    this.start = new Point(this.start.x + delta.x, this.start.y + delta.y)
+  }
 }

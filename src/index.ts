@@ -14,8 +14,14 @@ export default class Gambar {
   canvas: HTMLCanvasElement
   context: CanvasRenderingContext2D
   shapes: Shape[]
+  bBoxStyle: StyleProps
+  handleStyle: StyleProps
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(
+    canvas: HTMLCanvasElement,
+    bBoxStyle?: StyleProps,
+    handleStyle?: StyleProps
+  ) {
     this.canvas = canvas
 
     try {
@@ -25,6 +31,8 @@ export default class Gambar {
       console.log(e)
     }
 
+    this.bBoxStyle = bBoxStyle
+    this.handleStyle = handleStyle
     this.shapes = []
   }
 
@@ -96,18 +104,24 @@ export default class Gambar {
   render(): void {
     // Clear canvas and redraw all shapes in stack
     this.clearCanvas()
+
     this.shapes.forEach(shape => {
       shape.draw(this.context)
     })
+
+    // Draw boundingBox on top of everything
+    this.shapes.forEach(shape => {
+      if (shape.selected) {
+        this.boundingBox(shape)
+      }
+    })
   }
 
-  boundingBox(
-    shape: Shape,
-    boxStyle: StyleProps,
-    handleStyle: StyleProps
-  ): void {
-    const bbox = new BoundingBox(shape, boxStyle, handleStyle)
-    bbox.draw(this.context)
+  private boundingBox(shape: Shape): void {
+    if (this.bBoxStyle && this.handleStyle) {
+      const bbox = new BoundingBox(shape, this.bBoxStyle, this.handleStyle)
+      bbox.draw(this.context)
+    }
   }
 
   selectShapeAtPoint(point: Point, clearSelection = true): void {
@@ -119,6 +133,7 @@ export default class Gambar {
     if (selectedShape) {
       selectedShape.selected = true
     }
+    this.render()
   }
 
   findShapeAtPoint(point: Point): Shape {
@@ -132,15 +147,69 @@ export default class Gambar {
     return null
   }
 
-  moveShape(shapeToMove: Shape, newStart: Point): void {
-    console.log(this.shapes)
-    this.shapes = this.shapes.map(shape => {
-      if (shape === shapeToMove) {
-        shape.start = newStart
+  private swapLayerOrder(idxA: number, idxB: number): void {
+    const temp: Shape = this.shapes[idxA]
+    this.shapes[idxA] = this.shapes[idxB]
+    this.shapes[idxB] = temp
+  }
+
+  private findSelectedShapes(): [Shape, number][] {
+    const selectedShapes: [Shape, number][] = []
+    this.shapes.forEach((shape: Shape, i: number) => {
+      if (shape.selected) {
+        selectedShapes.push([shape, i])
       }
-      return shape
     })
-    console.log(this.shapes)
+    return selectedShapes
+  }
+
+  pushSelectedShapesBackward(): void {
+    const selectedShapes: [Shape, number][] = this.findSelectedShapes()
+    for (const [shape, i] of selectedShapes) {
+      // bottom-most object can't be pushed any more backward
+      if (i > 0) {
+        this.swapLayerOrder(i, i - 1)
+      }
+    }
+    this.render()
+  }
+
+  pullSelectedShapesForward(): void {
+    const selectedShapes: [Shape, number][] = this.findSelectedShapes()
+    for (let i = selectedShapes.length - 1; i >= 0; i--) {
+      // top-most object can't be pushed any more forward
+      if (selectedShapes[i][1] < this.shapes.length - 1) {
+        this.swapLayerOrder(i, i + 1)
+      }
+    }
+    this.render()
+  }
+
+  moveSelectedShapes(delta: Point): void {
+    for (const shape of this.shapes) {
+      if (shape.selected) {
+        shape.move(delta)
+      }
+    }
+    this.render()
+    console.log("not implemented correctly")
+
+    /* const selectedShapes: [Shape, number][] = this.findSelectedShapes() */
+    /* for (const [shape, i] of selectedShapes) { */
+    /*   const idx = this.shapes.findIndex(_shape => _shape.selected) */
+    /*   if (shape.type === "RECTANGLE") { */
+    /*     const pt0 = new Point(shape.start.x + delta.x, shape.start.y + delta.y) */
+    /*     const pt1 = new Point(pt0.x + shape.width, pt0.y + shape.height) */
+    /*     const style = { */
+    /*       strokeColor: shape.strokeColor, */
+    /*       strokeWidth: shape.strokeWidth, */
+    /*       fillColor: shape.fillColor, */
+    /*     } */
+    /*     const rect = new Rectangle(pt0, pt1, style) */
+    /*     this.shapes.splice(idx, 1, rect) */
+    /*   } */
+    /* } */
+    /* this.render() */
   }
 
   loadStack(shapes: Shape[]): void {
