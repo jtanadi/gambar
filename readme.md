@@ -31,7 +31,7 @@ Most shapes have the same signature: `shape(startPt, endPt, style)`.
 
 `style` is a `StyleProps` object with `{strokeColor, strokeWidth, fillColor}` optional members.
 
-When `save` is off, the shape is only drawn temporarily and won't be pushed onto the `shapes` stack.
+When `save` is `false`, the shape is only drawn temporarily and won't be pushed onto the `shapes` stack.
 
 ```javascript
 gambar.rectangle(
