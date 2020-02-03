@@ -6,18 +6,19 @@ let selectedTool = document.querySelector(".selected")
 const historyBtns = document.querySelectorAll(".history")
 const fileButtons = document.querySelectorAll(".file-button")
 
-const boxStyle = {
-  strokeColor: "#0D98BA",
-  strokeWidth: 2,
+const boundingBoxStyle = {
+  edgeStyle: {
+    strokeColor: "#0D98BA",
+    strokeWidth: 2,
+  },
+  nodeStyle: {
+    strokeColor: "black",
+    strokeWidth: 1,
+    fillColor: "white",
+  },
 }
 
-const handleStyle = {
-  strokeColor: "black",
-  strokeWidth: 1,
-  fillColor: "white",
-}
-
-const dwg = new Drawing(canvas, boxStyle, handleStyle)
+const dwg = new Drawing(canvas, boundingBoxStyle)
 
 let down = false
 let drag = false
@@ -140,9 +141,9 @@ canvas.addEventListener("mouseup", evt => {
   if (start.x === end.x && start.y === end.y) return
 
   const style = {
-    strokeColor: "green",
+    strokeColor: "blue",
     strokeWidth: 1,
-    fillColor: "lightblue",
+    fillColor: "white",
   }
 
   switch (selectedTool.id) {
