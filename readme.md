@@ -4,6 +4,8 @@ Gambar doesn't aim to be comprehensive, but allows for a convenient
 
 The name is Indonesian and translates to *picture*, *drawing*, or *to draw*.
 
+<img src="./docs/screenshot.png" width="500px" alt="screenshot"/>
+
 ## API
 ### Getting Started
 To start, create a new instance of `Gambar` and pass in your `canvas` element. `Gambar`'s constructor also accepts an optional parameter, `boundingBoxStyle`.
