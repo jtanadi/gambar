@@ -104,8 +104,11 @@ historyBtns.forEach(historyBtn => {
 
 fileButtons.forEach(btn => {
   btn.addEventListener("click", evt => {
-    if (evt.target.id === "open") {
-      dwg.open()
+    if (evt.target.id === "delete") {
+      const selected = dwg.findSelectedShapes()
+      for (const [shape] of selected) {
+        dwg.deleteShape(shape)
+      }
     } else if (evt.target.id === "save") {
       dwg.save()
     }
