@@ -119,6 +119,7 @@ export default class Gambar {
 
   deleteShape(shape: Shape): void {
     this.shapes = this.shapes.filter(_shape => _shape.id !== shape.id)
+    this.render()
   }
 
   clearSelection(): void {
@@ -156,7 +157,7 @@ export default class Gambar {
     return null
   }
 
-  private findSelectedShapes(): [Shape, number][] {
+  findSelectedShapes(): [Shape, number][] {
     const selectedShapes: [Shape, number][] = []
     this.shapes.forEach((shape: Shape, i: number) => {
       if (shape.selected) {
