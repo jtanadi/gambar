@@ -1,3 +1,5 @@
+import nanoid from "nanoid"
+
 import Point from "./Point"
 
 export interface StyleProps {
@@ -16,6 +18,7 @@ export enum PossibleShapes {
 }
 
 export default class Shape {
+  readonly id: string
   readonly type: PossibleShapes
   path: Path2D
   start: Point
@@ -27,6 +30,8 @@ export default class Shape {
   fillColor: string
 
   constructor(pt0: Point, pt1: Point, type: PossibleShapes, style: StyleProps) {
+    this.id = nanoid()
+
     const startX = pt0.x > pt1.x ? pt1.x : pt0.x
     const startY = pt0.y > pt1.y ? pt1.y : pt0.y
     this.start = new Point(startX, startY)
