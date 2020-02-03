@@ -28,7 +28,7 @@ export default class Gambar {
       this.context = this.canvas.getContext("2d")
       this.context.translate(0.5, 0.5)
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
 
     this.bBoxNodeStyle = boundingBoxStyle.nodeStyle
@@ -87,8 +87,8 @@ export default class Gambar {
     if (this.bBoxNodeStyle && this.bBoxEdgeStyle) {
       const bbox = new BoundingBox(
         shape,
-        this.bBoxNodeStyle,
-        this.bBoxEdgeStyle
+        this.bBoxEdgeStyle,
+        this.bBoxNodeStyle
       )
       bbox.draw(this.context)
     }
@@ -117,10 +117,9 @@ export default class Gambar {
     this.render()
   }
 
-  /* deleteShape(shape: Shape): void { */
-  /*   this.shapes = this.shapes */
-
-  /* } */
+  deleteShape(shape: Shape): void {
+    this.shapes = this.shapes.filter(_shape => _shape.id !== shape.id)
+  }
 
   clearSelection(): void {
     this.shapes.forEach(shape => {
@@ -197,10 +196,9 @@ export default class Gambar {
 
   moveSelectedShapes(delta: Point): void {
     console.warn("moveSelectedShapes isn't fully implemented correctly yet.")
-    for (const shape of this.shapes) {
-      if (shape.selected) {
-        shape.move(delta, this.context)
-      }
+    const selectedShapes: [Shape, number][] = this.findSelectedShapes()
+    for (const [shape, i] of selectedShapes) {
+      shape.move(delta, this.context)
     }
     this.render()
   }
