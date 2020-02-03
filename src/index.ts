@@ -1,4 +1,3 @@
-import HistoryStack from "./HistoryStack"
 import {
   BoundingBox,
   Point,
@@ -10,18 +9,19 @@ import {
   Polygon,
 } from "./geometry"
 
+interface BoundingBoxStyle {
+  nodeStyle: StyleProps
+  edgeStyle: StyleProps
+}
+
 export default class Gambar {
   canvas: HTMLCanvasElement
   context: CanvasRenderingContext2D
   shapes: Shape[]
-  bBoxStyle: StyleProps
-  handleStyle: StyleProps
+  bBoxNodeStyle: StyleProps
+  bBoxEdgeStyle: StyleProps
 
-  constructor(
-    canvas: HTMLCanvasElement,
-    bBoxStyle?: StyleProps,
-    handleStyle?: StyleProps
-  ) {
+  constructor(canvas: HTMLCanvasElement, boundingBoxStyle: BoundingBoxStyle) {
     this.canvas = canvas
 
     try {
@@ -31,27 +31,9 @@ export default class Gambar {
       console.log(e)
     }
 
-    this.bBoxStyle = bBoxStyle
-    this.handleStyle = handleStyle
+    this.bBoxNodeStyle = boundingBoxStyle.nodeStyle
+    this.bBoxEdgeStyle = boundingBoxStyle.edgeStyle
     this.shapes = []
-  }
-
-  delete(): void {
-    // Delete everything in drawing
-    this.shapes = []
-    this.render()
-  }
-
-  clearSelection(): void {
-    this.shapes.forEach(shape => {
-      shape.selected = false
-    })
-    this.render()
-  }
-
-  clearCanvas(): void {
-    // Clear context by drawing a clearRect the size of the canvas
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
   }
 
   rectangle(pt0: Point, pt1: Point, style: StyleProps, save = true): void {
@@ -101,6 +83,17 @@ export default class Gambar {
     }
   }
 
+  private boundingBox(shape: Shape): void {
+    if (this.bBoxNodeStyle && this.bBoxEdgeStyle) {
+      const bbox = new BoundingBox(
+        shape,
+        this.bBoxNodeStyle,
+        this.bBoxEdgeStyle
+      )
+      bbox.draw(this.context)
+    }
+  }
+
   render(): void {
     // Clear canvas and redraw all shapes in stack
     this.clearCanvas()
@@ -118,11 +111,27 @@ export default class Gambar {
     this.context.save()
   }
 
-  private boundingBox(shape: Shape): void {
-    if (this.bBoxStyle && this.handleStyle) {
-      const bbox = new BoundingBox(shape, this.bBoxStyle, this.handleStyle)
-      bbox.draw(this.context)
-    }
+  deleteAll(): void {
+    // Delete everything in drawing
+    this.shapes = []
+    this.render()
+  }
+
+  /* deleteShape(shape: Shape): void { */
+  /*   this.shapes = this.shapes */
+
+  /* } */
+
+  clearSelection(): void {
+    this.shapes.forEach(shape => {
+      shape.selected = false
+    })
+    this.render()
+  }
+
+  clearCanvas(): void {
+    // Clear context by drawing a clearRect the size of the canvas
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
   }
 
   selectShapeAtPoint(point: Point, clearSelection = true): void {
@@ -148,12 +157,6 @@ export default class Gambar {
     return null
   }
 
-  private swapLayerOrder(idxA: number, idxB: number): void {
-    const temp: Shape = this.shapes[idxA]
-    this.shapes[idxA] = this.shapes[idxB]
-    this.shapes[idxB] = temp
-  }
-
   private findSelectedShapes(): [Shape, number][] {
     const selectedShapes: [Shape, number][] = []
     this.shapes.forEach((shape: Shape, i: number) => {
@@ -162,6 +165,12 @@ export default class Gambar {
       }
     })
     return selectedShapes
+  }
+
+  private swapLayerOrder(idxA: number, idxB: number): void {
+    const temp: Shape = this.shapes[idxA]
+    this.shapes[idxA] = this.shapes[idxB]
+    this.shapes[idxB] = temp
   }
 
   pushSelectedShapesBackward(): void {
@@ -187,6 +196,7 @@ export default class Gambar {
   }
 
   moveSelectedShapes(delta: Point): void {
+    console.warn("moveSelectedShapes isn't fully implemented correctly yet.")
     for (const shape of this.shapes) {
       if (shape.selected) {
         shape.move(delta, this.context)
@@ -196,15 +206,16 @@ export default class Gambar {
   }
 
   loadStack(shapes: Shape[]): void {
+    // TODO: Validate input array
     this.shapes = shapes
     this.render()
   }
 
-  getDrawingData(): string {
-    return this.canvas.toDataURL()
-  }
-
   getShapeStack(): Shape[] {
     return this.shapes
+  }
+
+  getDrawingData(): string {
+    return this.canvas.toDataURL()
   }
 }
