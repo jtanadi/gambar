@@ -62,6 +62,9 @@ Forces the entire canvas to be re-rendered. This method is called by methods tha
 #### `deleteAll()`
 Delete all shapes in memory.
 
+#### `deleteShape(shape: Shape)`
+Delete specified shape.
+
 #### `clearSelection()`
 Deselects all shapes.
 
