@@ -7,13 +7,20 @@ export default class Ellipse extends Shape {
 
   constructor(pt0: Point, pt1: Point, style: StyleProps) {
     super(pt0, pt1, PossibleShapes.ELLIPSE, style)
+    this.createShape()
+  }
 
-    const rX = Math.abs(pt1.x - pt0.x) / 2
-    const rY = Math.abs(pt1.y - pt0.y) / 2
+  protected createShape(): void {
+    const pt1 = new Point(this.start.x + this.width, this.start.y + this.height)
+
+    const rX = Math.abs(pt1.x - this.start.x) / 2
+    const rY = Math.abs(pt1.y - this.start.y) / 2
     this.r = new Point(rX, rY)
 
-    const cX = pt1.x > pt0.x ? pt0.x + this.r.x : pt0.x - this.r.x
-    const cY = pt1.y > pt0.y ? pt0.y + this.r.y : pt0.y - this.r.y
+    const cX =
+      pt1.x > this.start.x ? this.start.x + this.r.x : this.start.x - this.r.x
+    const cY =
+      pt1.y > this.start.y ? this.start.y + this.r.y : this.start.y - this.r.y
     this.c = new Point(cX, cY)
 
     this.path = new Path2D()

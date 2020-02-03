@@ -2,6 +2,7 @@ import Point from "./Point"
 import Shape, { PossibleShapes, StyleProps } from "./Shape"
 
 export default class Polygon extends Shape {
+  points: Point[]
   constructor(pts: Point[], style: StyleProps) {
     let minX = Infinity
     let minY = Infinity
@@ -26,12 +27,24 @@ export default class Polygon extends Shape {
     const pt0 = new Point(minX, minY)
     const pt1 = new Point(maxX, maxY)
     super(pt0, pt1, PossibleShapes.POLYGON, style)
+    this.points = pts
+    this.createShape()
+  }
 
+  move(delta: Point): void {
+    this.start = new Point(this.start.x + delta.x, this.start.y + delta.y)
+    this.points = this.points.map(
+      pt => new Point(pt.x + delta.x, pt.y + delta.y)
+    )
+    this.createShape()
+  }
+
+  protected createShape(): void {
     this.path = new Path2D()
-    this.path.moveTo(pts[0].x, pts[0].y)
-    for (let i = 1; i < pts.length; i++) {
-      this.path.lineTo(pts[i].x, pts[i].y)
+    this.path.moveTo(this.points[0].x, this.points[0].y)
+    for (let i = 1; i < this.points.length; i++) {
+      this.path.lineTo(this.points[i].x, this.points[i].y)
     }
-    this.path.lineTo(pts[0].x, pts[0].y)
+    this.path.lineTo(this.points[0].x, this.points[0].y)
   }
 }

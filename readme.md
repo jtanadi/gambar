@@ -82,8 +82,8 @@ Push the selected shapes further down the layer stack.
 #### `pullSelectedShapesForward()`
 Pull the selected shapes up the layer stack.
 
-#### `moveSelectedShapes()`
-Move shapes
+#### `moveSelectedShapes(delta: Point)`
+Move selected shapes by `delta`. For example, if shape's origin is at `(10, 20)` and `delta` is `(100, 50)`, then the shape's new origin will be `(110, 70)`.
 
 #### `loadStack(shapes: Shape[])`
 Load the drawing `shapes` stack.

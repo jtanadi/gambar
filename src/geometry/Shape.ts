@@ -17,7 +17,7 @@ export enum PossibleShapes {
   POLYGON = "POLYGON",
 }
 
-export default class Shape {
+export default abstract class Shape {
   readonly id: string
   readonly type: PossibleShapes
   path: Path2D
@@ -59,7 +59,10 @@ export default class Shape {
     }
   }
 
-  move(delta: Point, ctx: CanvasRenderingContext2D): void {
-    ctx.translate(delta.x, delta.y)
+  move(delta: Point): void {
+    this.start = new Point(this.start.x + delta.x, this.start.y + delta.y)
+    this.createShape()
   }
+
+  protected abstract createShape(): void
 }

@@ -98,6 +98,7 @@ export default class Gambar {
     // Clear canvas and redraw all shapes in stack
     this.clearCanvas()
 
+    this.context.save()
     this.shapes.forEach(shape => {
       shape.draw(this.context)
     })
@@ -108,7 +109,7 @@ export default class Gambar {
         this.boundingBox(shape)
       }
     })
-    this.context.save()
+    this.context.restore()
   }
 
   deleteAll(): void {
@@ -196,10 +197,9 @@ export default class Gambar {
   }
 
   moveSelectedShapes(delta: Point): void {
-    console.warn("moveSelectedShapes isn't fully implemented correctly yet.")
     const selectedShapes: [Shape, number][] = this.findSelectedShapes()
-    for (const [shape, i] of selectedShapes) {
-      shape.move(delta, this.context)
+    for (const [shape] of selectedShapes) {
+      shape.move(delta)
     }
     this.render()
   }
