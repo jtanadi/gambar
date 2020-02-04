@@ -15,6 +15,7 @@ export enum PossibleShapes {
   LINE = "LINE",
   RECTANGLE = "RECTANGLE",
   POLYGON = "POLYGON",
+  POLYLINE = "POLYLINE",
 }
 
 export default abstract class Shape {

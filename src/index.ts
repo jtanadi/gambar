@@ -1,12 +1,13 @@
 import {
   BoundingBox,
-  Point,
-  Shape,
-  StyleProps,
-  Rectangle,
   Ellipse,
   Line,
+  Point,
   Polygon,
+  Polyline,
+  Rectangle,
+  Shape,
+  StyleProps,
 } from "./geometry"
 
 interface BoundingBoxStyle {
@@ -83,6 +84,17 @@ export default class Gambar {
     }
   }
 
+  polyline(points: Point[], style: StyleProps, save = true): void {
+    const polyline = new Polyline(points, style)
+    if (save) {
+      this.shapes.push(polyline)
+    }
+    this.render()
+    if (!save) {
+      polyline.draw(this.context)
+    }
+  }
+
   private boundingBox(shape: Shape): void {
     if (this.bBoxNodeStyle && this.bBoxEdgeStyle) {
       const bbox = new BoundingBox(
@@ -151,6 +163,8 @@ export default class Gambar {
     // Iterate from the back to select top-most object first
     for (let i = this.shapes.length - 1; i >= 0; i--) {
       const shape = this.shapes[i]
+      // Need to add check for line and polyline because
+      // the method below only works well for closed shapes
       if (this.context.isPointInPath(shape.path, point.x, point.y)) {
         return shape
       }
