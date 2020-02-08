@@ -32,8 +32,10 @@ export default class Gambar {
       console.error(e)
     }
 
-    this.bBoxNodeStyle = boundingBoxStyle.nodeStyle
-    this.bBoxEdgeStyle = boundingBoxStyle.edgeStyle
+    if (boundingBoxStyle) {
+      this.bBoxNodeStyle = boundingBoxStyle.nodeStyle
+      this.bBoxEdgeStyle = boundingBoxStyle.edgeStyle
+    }
     this.shapes = []
   }
 
