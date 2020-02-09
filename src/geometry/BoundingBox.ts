@@ -12,7 +12,6 @@ export default class BoundingBox {
 
   constructor(shape: Shape, boxStyle: StyleProps, handleStyle: StyleProps) {
     this.handleStyle = handleStyle
-    console.log(shape)
 
     let start: Point, end: Point
     if (shape instanceof Line) {
