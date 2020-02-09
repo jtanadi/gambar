@@ -5,7 +5,7 @@ import Point from "./Point"
 import Polygon from "./Polygon"
 import Polyline from "./Polyline"
 import Rectangle from "./Rectangle"
-import Shape, { StyleProps } from "./Shape"
+import Shape, { StyleProps, PossibleShapes } from "./Shape"
 
 export {
   BoundingBox,
@@ -14,6 +14,7 @@ export {
   Point,
   Polygon,
   Polyline,
+  PossibleShapes,
   Rectangle,
   Shape,
   StyleProps,
