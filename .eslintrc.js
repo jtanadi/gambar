@@ -19,6 +19,7 @@ module.exports = {
   },
   plugins: ["prettier", "@typescript-eslint"],
   rules: {
+    "@typescript-eslint/explicit-function-return-type": 0,
     "@typescript-eslint/member-delimiter-style": [
       "error",
       {
@@ -33,4 +34,12 @@ module.exports = {
       },
     ],
   },
+  overrides: [
+    {
+      files: ["*.ts", "*.tsx"],
+      rules: {
+        "@typescript-eslint/explicit-function-return-type": ["error"],
+      },
+    },
+  ],
 }
