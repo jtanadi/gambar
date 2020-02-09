@@ -192,7 +192,7 @@ export default class Gambar {
 
   pushSelectedShapesBackward(): void {
     const selectedShapes: [Shape, number][] = this.findSelectedShapes()
-    for (const [shape, i] of selectedShapes) {
+    for (const [, i] of selectedShapes) {
       // bottom-most object can't be pushed any more backward
       if (i > 0) {
         this.swapLayerOrder(i, i - 1)
