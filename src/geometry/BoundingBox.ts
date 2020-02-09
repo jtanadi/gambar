@@ -1,6 +1,9 @@
 import Point from "./Point"
+import Line from "./Line"
 import Rectangle from "./Rectangle"
 import Shape, { StyleProps } from "./Shape"
+
+import { getNwSeCorners } from "../utils"
 
 export default class BoundingBox {
   box: Rectangle
@@ -9,23 +12,27 @@ export default class BoundingBox {
 
   constructor(shape: Shape, boxStyle: StyleProps, handleStyle: StyleProps) {
     this.handleStyle = handleStyle
+    console.log(shape)
 
-    const boxEnd = new Point(
-      shape.start.x + shape.width,
-      shape.start.y + shape.height
-    )
-    this.box = new Rectangle(shape.start, boxEnd, boxStyle, false)
+    let start: Point, end: Point
+    if (shape instanceof Line) {
+      ;[start, end] = getNwSeCorners([shape.lineStart, shape.lineEnd])
+    } else {
+      start = shape.start
+      end = new Point(shape.start.x + shape.width, shape.start.y + shape.height)
+    }
+    this.box = new Rectangle(start, end, boxStyle, false)
 
     this.points = [
-      shape.start,
-      new Point(shape.start.x + shape.width, shape.start.y),
-      new Point(shape.start.x + shape.width, shape.start.y + shape.height),
-      new Point(shape.start.x, shape.start.y + shape.height),
+      start,
+      new Point(start.x + shape.width, start.y),
+      new Point(start.x + shape.width, start.y + shape.height),
+      new Point(start.x, start.y + shape.height),
 
-      new Point(shape.start.x + shape.width / 2, shape.start.y),
-      new Point(shape.start.x + shape.width, shape.start.y + shape.height / 2),
-      new Point(shape.start.x + shape.width / 2, shape.start.y + shape.height),
-      new Point(shape.start.x, shape.start.y + shape.height / 2),
+      new Point(start.x + shape.width / 2, start.y),
+      new Point(start.x + shape.width, start.y + shape.height / 2),
+      new Point(start.x + shape.width / 2, start.y + shape.height),
+      new Point(start.x, start.y + shape.height / 2),
     ]
   }
 
