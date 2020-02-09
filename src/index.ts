@@ -116,9 +116,10 @@ export default class Gambar {
     this.context.save()
     this.shapes.forEach(shape => {
       shape.draw(this.context)
-      if (shape instanceof Line) {
-        shape.drawPseudoPath(this.context)
-      }
+
+      // if (shape instanceof Line) {
+      //   shape.drawPseudoPath(this.context)
+      // }
     })
 
     // Draw boundingBox on top of everything
