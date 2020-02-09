@@ -1,6 +1,6 @@
 import Point from "./Point"
 import Shape, { PossibleShapes, StyleProps } from "./Shape"
-import { getNwSeCorners } from "./utils"
+import { getNwSeCorners } from "../utils"
 
 export default class Polygon extends Shape {
   points: Point[]
