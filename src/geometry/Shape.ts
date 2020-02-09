@@ -19,7 +19,7 @@ export enum PossibleShapes {
 }
 
 export default abstract class Shape {
-  readonly id: string
+  readonly id?: string
   readonly type: PossibleShapes
   path: Path2D
   start: Point
@@ -30,11 +30,20 @@ export default abstract class Shape {
   strokeWidth: number
   fillColor: string
 
-  constructor(pt0: Point, pt1: Point, type: PossibleShapes, style: StyleProps) {
-    this.id = nanoid()
+  constructor(
+    pt0: Point,
+    pt1: Point,
+    type: PossibleShapes,
+    style: StyleProps,
+    save: boolean
+  ) {
+    // Prevent marquees from needing IDs generated
+    if (save) {
+      this.id = nanoid()
+    }
 
-    const startX = pt0.x > pt1.x ? pt1.x : pt0.x
-    const startY = pt0.y > pt1.y ? pt1.y : pt0.y
+    const startX = pt0.x < pt1.x ? pt0.x : pt1.x
+    const startY = pt0.y < pt1.y ? pt0.y : pt1.y
     this.start = new Point(startX, startY)
 
     this.type = type
@@ -46,6 +55,8 @@ export default abstract class Shape {
     this.width = Math.abs(pt1.x - pt0.x)
     this.height = Math.abs(pt1.y - pt0.y)
   }
+
+  protected abstract createShape(): void
 
   draw(context: CanvasRenderingContext2D): void {
     if (this.fillColor) {
@@ -64,6 +75,4 @@ export default abstract class Shape {
     this.start = new Point(this.start.x + delta.x, this.start.y + delta.y)
     this.createShape()
   }
-
-  protected abstract createShape(): void
 }
