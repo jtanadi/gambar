@@ -6,6 +6,7 @@ import {
   Polygon,
   Polyline,
   Rectangle,
+  PossibleShapes,
   Shape,
   StyleProps,
 } from "./geometry"
@@ -41,7 +42,7 @@ export default class Gambar {
 
   rectangle(pt0: Point, pt1: Point, style: StyleProps, save = true): void {
     this.clearSelection()
-    const rect = new Rectangle(pt0, pt1, style)
+    const rect = new Rectangle(pt0, pt1, style, save)
     if (save) {
       this.shapes.push(rect)
     }
@@ -53,7 +54,7 @@ export default class Gambar {
 
   ellipse(pt0: Point, pt1: Point, style: StyleProps, save = true): void {
     this.clearSelection()
-    const ellipse = new Ellipse(pt0, pt1, style)
+    const ellipse = new Ellipse(pt0, pt1, style, save)
     if (save) {
       this.shapes.push(ellipse)
     }
@@ -65,7 +66,7 @@ export default class Gambar {
 
   line(pt0: Point, pt1: Point, style: StyleProps, save = true): void {
     this.clearSelection()
-    const line = new Line(pt0, pt1, style)
+    const line = new Line(pt0, pt1, style, save)
     if (save) {
       this.shapes.push(line)
     }
@@ -76,7 +77,7 @@ export default class Gambar {
   }
 
   polygon(points: Point[], style: StyleProps, save = true): void {
-    const polygon = new Polygon(points, style)
+    const polygon = new Polygon(points, style, save)
     if (save) {
       this.shapes.push(polygon)
     }
@@ -87,7 +88,7 @@ export default class Gambar {
   }
 
   polyline(points: Point[], style: StyleProps, save = true): void {
-    const polyline = new Polyline(points, style)
+    const polyline = new Polyline(points, style, save)
     if (save) {
       this.shapes.push(polyline)
     }
@@ -115,6 +116,9 @@ export default class Gambar {
     this.context.save()
     this.shapes.forEach(shape => {
       shape.draw(this.context)
+      if (shape instanceof Line) {
+        shape.drawPseudoPath(this.context)
+      }
     })
 
     // Draw boundingBox on top of everything
@@ -166,10 +170,14 @@ export default class Gambar {
     // Iterate from the back to select top-most object first
     for (let i = this.shapes.length - 1; i >= 0; i--) {
       const shape = this.shapes[i]
-      // Need to add check for line and polyline because
-      // the method below only works well for closed shapes
-      if (this.context.isPointInPath(shape.path, point.x, point.y)) {
-        return shape
+      if (shape instanceof Line) {
+        if (this.context.isPointInPath(shape.pseudoPath, point.x, point.y)) {
+          return shape
+        }
+      } else {
+        if (this.context.isPointInPath(shape.path, point.x, point.y)) {
+          return shape
+        }
       }
     }
     return null
