@@ -16,7 +16,7 @@ export default class BoundingBox {
 
     let start: Point, end: Point
     if (shape instanceof Line) {
-      ;[start, end] = getNwSeCorners([shape.lineStart, shape.lineEnd])
+      ;[start, end] = getNwSeCorners([shape.start, shape.lineEnd])
     } else {
       start = shape.start
       end = new Point(shape.start.x + shape.width, shape.start.y + shape.height)
