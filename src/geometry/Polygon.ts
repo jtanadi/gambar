@@ -3,11 +3,12 @@ import Shape, { PossibleShapes, StyleProps } from "./Shape"
 
 export default class Polygon extends Shape {
   points: Point[]
-  constructor(pts: Point[], style: StyleProps) {
-    let minX = Infinity
-    let minY = Infinity
-    let maxX = -Infinity
-    let maxY = -Infinity
+
+  constructor(pts: Point[], style: StyleProps, save: boolean) {
+    let minX = pts[0].x
+    let minY = pts[0].y
+    let maxX = pts[0].x
+    let maxY = pts[0].y
 
     for (const point of pts) {
       if (point.x < minX) {
@@ -26,7 +27,8 @@ export default class Polygon extends Shape {
 
     const pt0 = new Point(minX, minY)
     const pt1 = new Point(maxX, maxY)
-    super(pt0, pt1, PossibleShapes.POLYGON, style)
+
+    super(pt0, pt1, PossibleShapes.POLYGON, style, save)
     this.points = pts
     this.createShape()
   }
