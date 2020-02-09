@@ -48,15 +48,15 @@ export default abstract class Shape {
   }
 
   draw(context: CanvasRenderingContext2D): void {
+    if (this.fillColor) {
+      context.fillStyle = this.fillColor
+      context.fill(this.path)
+    }
+
     if (this.strokeColor && this.strokeWidth) {
       context.strokeStyle = this.strokeColor
       context.lineWidth = this.strokeWidth
       context.stroke(this.path)
-    }
-
-    if (this.fillColor) {
-      context.fillStyle = this.fillColor
-      context.fill(this.path)
     }
   }
 
