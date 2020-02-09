@@ -1,4 +1,4 @@
-import Point from "../Point"
+import Point from "../geometry/Point"
 
 export function getNwSeCorners(pts: Point[]): [Point, Point] {
   let minX = pts[0].x
