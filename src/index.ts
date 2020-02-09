@@ -220,6 +220,17 @@ export default class Gambar {
     this.render()
   }
 
+  popShape(): Shape {
+    const shape = this.shapes.pop()
+    this.render()
+    return shape
+  }
+
+  pushShape(shape: Shape): void {
+    this.shapes.push(shape)
+    this.render()
+  }
+
   loadStack(shapes: Shape[]): void {
     // TODO: Validate input array
     this.shapes = shapes
