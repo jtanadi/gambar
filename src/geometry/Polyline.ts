@@ -1,13 +1,12 @@
 import Point from "./Point"
 import Shape, { PossibleShapes, StyleProps } from "./Shape"
+import { getNwSeCorners } from "../utils"
 
 export default class Polyline extends Shape {
   points: Point[]
 
   constructor(points: Point[], style: StyleProps, save: boolean) {
-    const pt0 = points[0]
-    const pt1 = points[points.length - 1]
-
+    const [pt0, pt1] = getNwSeCorners(points)
     super(pt0, pt1, PossibleShapes.POLYLINE, style, save)
     this.points = points
   }
