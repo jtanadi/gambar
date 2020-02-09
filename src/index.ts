@@ -149,7 +149,7 @@ export default class Gambar {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
   }
 
-  selectShapeAtPoint(point: Point, clearSelection = true): void {
+  selectShapeAtPoint(point: Point, clearSelection = true): Shape {
     if (clearSelection) {
       this.clearSelection()
     }
@@ -159,6 +159,7 @@ export default class Gambar {
       selectedShape.selected = true
     }
     this.render()
+    return selectedShape
   }
 
   findShapeAtPoint(point: Point): Shape {
