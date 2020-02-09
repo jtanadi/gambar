@@ -4,14 +4,14 @@ import Shape, { PossibleShapes, StyleProps } from "./Shape"
 const PSEUDOPATH_THRESHOLD = 4
 
 export default class Line extends Shape {
-  end: Point
+  lineStart: Point
+  lineEnd: Point
   pseudoPath: Path2D
 
   constructor(pt0: Point, pt1: Point, style: StyleProps, save: boolean) {
     super(pt0, pt1, PossibleShapes.LINE, style, save)
-    const endX = pt1.x >= pt0.x ? pt1.x : pt0.x
-    const endY = pt1.y >= pt0.y ? pt1.y : pt0.y
-    this.end = new Point(endX, endY)
+    this.lineStart = pt0
+    this.lineEnd = pt1
 
     this.createShape()
     this.pseudoPath = this.createPseudoPath(
@@ -22,14 +22,18 @@ export default class Line extends Shape {
   }
 
   move(delta: Point): void {
-    this.start = new Point(this.start.x + delta.x, this.start.y + delta.y)
-    this.end = new Point(this.end.x + delta.x, this.end.y + delta.y)
-    this.createShape()
-    this.pseudoPath = this.createPseudoPath(
-      this.strokeWidth < PSEUDOPATH_THRESHOLD
-        ? PSEUDOPATH_THRESHOLD
-        : this.strokeWidth
-    )
+    // this.start = new Point(this.start.x + delta.x, this.start.y + delta.y)
+    // this.lineStart = new Point(
+    //   this.lineStart.x + delta.x,
+    //   this.lineStart.y + delta.y
+    // )
+    // this.lineEnd = new Point(this.lineEnd.x + delta.x, this.lineEnd.y + delta.y)
+    // this.createShape()
+    // this.pseudoPath = this.createPseudoPath(
+    //   this.strokeWidth < PSEUDOPATH_THRESHOLD
+    //     ? PSEUDOPATH_THRESHOLD
+    //     : this.strokeWidth
+    // )
   }
 
   drawPseudoPath(context: CanvasRenderingContext2D): void {
@@ -40,8 +44,8 @@ export default class Line extends Shape {
 
   protected createShape(): void {
     this.path = new Path2D()
-    this.path.moveTo(this.start.x, this.start.y)
-    this.path.lineTo(this.end.x, this.end.y)
+    this.path.moveTo(this.lineStart.x, this.lineStart.y)
+    this.path.lineTo(this.lineEnd.x, this.lineEnd.y)
   }
 
   private createPseudoPath(d: number): Path2D {
@@ -55,20 +59,21 @@ export default class Line extends Shape {
     //     |                        |
     // (x4, y4) ---------------- (x3, y3)
 
-    const m = (this.end.y - this.start.y) / (this.end.x - this.start.x)
+    const m =
+      (this.lineEnd.y - this.lineStart.y) / (this.lineEnd.x - this.lineStart.x)
     const perpM = -1 / m
 
-    const newX1 = this.start.x + Math.sqrt(d ** 2 / (1 + 1 / m ** 2))
-    const newX4 = this.start.x - Math.sqrt(d ** 2 / (1 + 1 / m ** 2))
+    const newX1 = this.lineStart.x + Math.sqrt(d ** 2 / (1 + 1 / m ** 2))
+    const newX4 = this.lineStart.x - Math.sqrt(d ** 2 / (1 + 1 / m ** 2))
 
-    const perpB1 = this.start.y - perpM * this.start.x
+    const perpB1 = this.lineStart.y - perpM * this.lineStart.x
     const newY1 = perpM * newX1 + perpB1
     const newY4 = perpM * newX4 + perpB1
 
-    const newX2 = this.end.x + Math.sqrt(d ** 2 / (1 + 1 / m ** 2))
-    const newX3 = this.end.x - Math.sqrt(d ** 2 / (1 + 1 / m ** 2))
+    const newX2 = this.lineEnd.x + Math.sqrt(d ** 2 / (1 + 1 / m ** 2))
+    const newX3 = this.lineEnd.x - Math.sqrt(d ** 2 / (1 + 1 / m ** 2))
 
-    const perpB2 = this.end.y - perpM * this.end.x
+    const perpB2 = this.lineEnd.y - perpM * this.lineEnd.x
     const newY2 = perpM * newX2 + perpB2
     const newY3 = perpM * newX3 + perpB2
 
