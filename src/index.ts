@@ -205,9 +205,11 @@ export default class Gambar {
   pullSelectedShapesForward(): void {
     const selectedShapes: [Shape, number][] = this.findSelectedShapes()
     for (let i = selectedShapes.length - 1; i >= 0; i--) {
+      const [, shapeIndex] = selectedShapes[i]
+
       // top-most object can't be pushed any more forward
-      if (selectedShapes[i][1] < this.shapes.length - 1) {
-        this.swapLayerOrder(i, i + 1)
+      if (shapeIndex < this.shapes.length - 1) {
+        this.swapLayerOrder(shapeIndex, shapeIndex + 1)
       }
     }
     this.render()
