@@ -14,7 +14,7 @@ export default class BoundingBox {
       shape.start.x + shape.width,
       shape.start.y + shape.height
     )
-    this.box = new Rectangle(shape.start, boxEnd, boxStyle)
+    this.box = new Rectangle(shape.start, boxEnd, boxStyle, false)
 
     this.points = [
       shape.start,
@@ -34,7 +34,7 @@ export default class BoundingBox {
     const pt0 = new Point(point.x - handleSize / 2, point.y - handleSize / 2)
     const pt1 = new Point(point.x + handleSize / 2, point.y + handleSize / 2)
 
-    const handle = new Rectangle(pt0, pt1, this.handleStyle)
+    const handle = new Rectangle(pt0, pt1, this.handleStyle, false)
     handle.draw(context)
   }
 
