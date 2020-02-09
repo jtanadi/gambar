@@ -1,33 +1,12 @@
 import Point from "./Point"
 import Shape, { PossibleShapes, StyleProps } from "./Shape"
+import { getNwSeCorners } from "./utils"
 
 export default class Polygon extends Shape {
   points: Point[]
 
   constructor(pts: Point[], style: StyleProps, save: boolean) {
-    let minX = pts[0].x
-    let minY = pts[0].y
-    let maxX = pts[0].x
-    let maxY = pts[0].y
-
-    for (const point of pts) {
-      if (point.x < minX) {
-        minX = point.x
-      }
-      if (point.y < minY) {
-        minY = point.y
-      }
-      if (point.x > maxX && point.x > minX) {
-        maxX = point.x
-      }
-      if (point.y > maxY && point.y > minY) {
-        maxY = point.y
-      }
-    }
-
-    const pt0 = new Point(minX, minY)
-    const pt1 = new Point(maxX, maxY)
-
+    const [pt0, pt1] = getNwSeCorners(pts)
     super(pt0, pt1, PossibleShapes.POLYGON, style, save)
     this.points = pts
     this.createShape()
