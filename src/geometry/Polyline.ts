@@ -4,11 +4,11 @@ import Shape, { PossibleShapes, StyleProps } from "./Shape"
 export default class Polyline extends Shape {
   points: Point[]
 
-  constructor(points: Point[], style: StyleProps) {
+  constructor(points: Point[], style: StyleProps, save: boolean) {
     const pt0 = points[0]
     const pt1 = points[points.length - 1]
 
-    super(pt0, pt1, PossibleShapes.POLYLINE, style)
+    super(pt0, pt1, PossibleShapes.POLYLINE, style, save)
     this.points = points
   }
 

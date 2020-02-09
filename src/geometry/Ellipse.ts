@@ -5,8 +5,8 @@ export default class Ellipse extends Shape {
   r: Point
   c: Point
 
-  constructor(pt0: Point, pt1: Point, style: StyleProps) {
-    super(pt0, pt1, PossibleShapes.ELLIPSE, style)
+  constructor(pt0: Point, pt1: Point, style: StyleProps, save: boolean) {
+    super(pt0, pt1, PossibleShapes.ELLIPSE, style, save)
     this.createShape()
   }
 
