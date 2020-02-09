@@ -1,4 +1,4 @@
-import Drawing from "../../"
+import Gambar from "../../"
 
 const canvas = document.getElementById("canvas")
 const tools = document.querySelectorAll(".tool")
@@ -18,7 +18,7 @@ const boundingBoxStyle = {
   },
 }
 
-const dwg = new Drawing(canvas, boundingBoxStyle)
+const dwg = new Gambar(canvas, boundingBoxStyle)
 
 let down = false
 let drag = false
