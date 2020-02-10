@@ -77,6 +77,7 @@ export default class Gambar {
   }
 
   polygon(points: Point[], style: StyleProps, save = true): void {
+    this.clearSelection()
     const polygon = new Polygon(points, style, save)
     if (save) {
       this.shapes.push(polygon)
@@ -88,6 +89,7 @@ export default class Gambar {
   }
 
   polyline(points: Point[], style: StyleProps, save = true): void {
+    this.clearSelection()
     const polyline = new Polyline(points, style, save)
     if (save) {
       this.shapes.push(polyline)
