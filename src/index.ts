@@ -6,7 +6,6 @@ import {
   Polygon,
   Polyline,
   Rectangle,
-  PossibleShapes,
   Shape,
   StyleProps,
 } from "./geometry"
