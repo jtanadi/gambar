@@ -12,7 +12,7 @@ export default class Polyline extends Shape {
   }
 
   move(delta: Point): void {
-    throw new Error("Not yet implemented")
+    console.warn("Not yet implemented. Delta: ", delta)
   }
 
   protected createShape(): void {
