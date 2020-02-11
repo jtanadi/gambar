@@ -138,8 +138,13 @@ export default class Gambar {
     this.render()
   }
 
-  deleteShape(shape: Shape): void {
+  deleteShapeById(shape: Shape): void {
     this.shapes = this.shapes.filter(_shape => _shape.id !== shape.id)
+    this.render()
+  }
+
+  deleteSelectedShapes(): void {
+    this.shapes = this.shapes.filter(shape => !shape.selected)
     this.render()
   }
 
