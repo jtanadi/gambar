@@ -22,7 +22,18 @@ export default class Gambar {
   bBoxNodeStyle: StyleProps
   bBoxEdgeStyle: StyleProps
 
-  constructor(canvas: HTMLCanvasElement, boundingBoxStyle: BoundingBoxStyle) {
+  constructor(canvas?: HTMLCanvasElement, boundingBoxStyle?: BoundingBoxStyle) {
+    if (canvas) {
+      this.setCanvas(canvas)
+    }
+
+    if (boundingBoxStyle) {
+      this.setBoundingBoxStyle(boundingBoxStyle)
+    }
+    this.shapes = []
+  }
+
+  setCanvas(canvas: HTMLCanvasElement): void {
     this.canvas = canvas
 
     try {
@@ -31,7 +42,9 @@ export default class Gambar {
     } catch (e) {
       console.error(e)
     }
+  }
 
+  setBoundingBoxStyle(boundingBoxStyle: BoundingBoxStyle): void {
     if (boundingBoxStyle) {
       this.bBoxNodeStyle = boundingBoxStyle.nodeStyle
       this.bBoxEdgeStyle = boundingBoxStyle.edgeStyle
